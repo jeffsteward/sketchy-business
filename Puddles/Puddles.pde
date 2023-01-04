@@ -3,7 +3,7 @@ ArrayList<Cluster> clusters = new ArrayList<Cluster>();
 boolean animate = true;
 
 void setup() {
-  size(1000, 1000, P2D);
+  size(1700, 1000, P2D);
   noCursor();
   rectMode(CENTER);
 }
