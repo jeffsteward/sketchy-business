@@ -16,7 +16,7 @@ void draw() {
 }
 
 void mousePressed() {
-  clouds.add(new Cloud(mouseX, mouseY, int(random(5, 50)), int(random(100, 300)))); 
+  clouds.add(new Cloud(mouseX, mouseY, int(random(5, 50)), int(random(100, 400)))); 
 }
 
 class Cloud {
@@ -36,7 +36,7 @@ class Cloud {
       
       segements = new PShape[density];
       for (int i=0;i<density;i++) {
-         segements[i] = createShape(ELLIPSE, 0, 0, size*random(0.4,0.7), 100*random(0.4,0.7)); 
+         segements[i] = createShape(ELLIPSE, 0, 0, size*random(0.4,0.7), size*random(0.4,0.7)); 
          segements[i].translate(xpos+random(-spread,spread), ypos+random(-spread,spread));
          segements[i].rotate(radians(random(-20,50)));
          segements[i].setFill(color(fill + random(-5,5)));
