@@ -2,4 +2,4 @@
  
 ## Puddles
 
-![Animated GIF of puddles](puddles/output/puddles.gif)
+![Animated GIF of puddles](Puddles/output/puddles.gif)
