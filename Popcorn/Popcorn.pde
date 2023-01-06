@@ -18,6 +18,21 @@ void mousePressed() {
   clouds.add(new Cloud(mouseX, mouseY, int(random(100, 200)), int(random(20, 30)))); 
 }
 
+void keyPressed() {
+    switch (key) {
+    case 'a': 
+      // do something here
+      break;
+    case 'c': 
+      clouds.clear();
+      break;
+    case 's':
+      save("output/frame" + frameCount + ".png");
+    default:
+      break;
+  }
+}
+
 class Cloud {
   PShape[] segments;
   int fill = int(random(0,255));
