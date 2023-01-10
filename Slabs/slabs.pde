@@ -47,6 +47,7 @@ class Slab {
     void create() {
         PVector ul, ur, ll, lr;
         PVector bl, br;
+        PShape upper, lower;
 
         ul = new PVector(0, 0);
         ur = PVector.add(ul, new PVector(random(ul.x+20, 420), random(ul.y+10, ul.y+80)));
@@ -63,24 +64,35 @@ class Slab {
         br = new PVector(ur.x, ur.y);
         br.add(0, abs(ll.y*2));
 
-        slab = createShape();
-        slab.beginShape(QUAD);
-        slab.fill(random(200,255));
-        slab.stroke(0);
-        slab.vertex(br.x, br.y);
-        slab.vertex(bl.x, bl.y);
-        slab.vertex(ll.x, ll.y);
-        slab.vertex(lr.x, lr.y);
+        float fill = random(200, 255);
+        upper = createShape();
+        upper.beginShape(QUAD);
+        upper.fill(fill);
+        upper.stroke(0);
+        upper.vertex(ll.x, ll.y);
+        upper.vertex(lr.x, lr.y);        
+        upper.vertex(ur.x, ur.y);
+        upper.vertex(ul.x, ul.y);
+        upper.endShape(CLOSE);
+
+        lower = createShape();
+        lower.beginShape(QUAD);
+        lower.fill(random(fill-65,fill-55));
+        lower.stroke(0);
+        lower.vertex(br.x, br.y);
+        lower.vertex(bl.x, bl.y);
+        lower.vertex(ll.x, ll.y);
+        lower.vertex(lr.x, lr.y);
+        lower.endShape(CLOSE);
         
-        slab.vertex(ll.x, ll.y);
-        slab.vertex(lr.x, lr.y);        
-        slab.vertex(ur.x, ur.y);
-        slab.vertex(ul.x, ul.y);
-        slab.translate(xpos, ypos);
-        slab.endShape(CLOSE);
+        slab = createShape(GROUP);
+        slab.addChild(upper);
+        slab.addChild(lower);
     }
 
     void display() {
+        slab.resetMatrix();
+        slab.translate(xpos, ypos);
         shape(slab);
     }
 }
