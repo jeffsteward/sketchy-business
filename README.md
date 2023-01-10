@@ -13,4 +13,4 @@ A series of experiments made with [Processing](https://processing.org/)
 
 ## Slabs
 
-![Still image of geometric shapes](Slabs/output/frame2488.png)
+![Still image of geometric shapes](Slabs/output/frame4161.png)
