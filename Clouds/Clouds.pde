@@ -1,5 +1,7 @@
 ArrayList<Cloud> clouds = new ArrayList<Cloud>();
 
+PVector click;
+
 void setup() {
   size(1700, 1000);
   rectMode(CENTER);
@@ -9,14 +11,26 @@ void setup() {
 
 void draw() {
   background(100);
-  
+
   for (Cloud c : clouds) {
     c.display();
+  }
+  
+  if (mousePressed) {
+    stroke(0);
+    line(click.x, click.y, mouseX, mouseY);
   }
 }
 
 void mousePressed() {
-  clouds.add(new Cloud(mouseX, mouseY, int(random(5, 50)), int(random(100, 400)))); 
+  click = new PVector(mouseX, mouseY);
+}
+
+void mouseReleased() {
+  PVector release = new PVector(mouseX, mouseY);
+  float d = abs(release.dist(click));
+  
+  clouds.add(new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d))); 
 }
 
 void keyPressed() {
@@ -47,7 +61,7 @@ class Cloud {
       xpos = x;
       ypos = y;
       density = d;
-      size = s;
+      size = s*2;
       spread = size/5;
       
       segements = new PShape[density];
@@ -55,6 +69,7 @@ class Cloud {
          segements[i] = createShape(ELLIPSE, 0, 0, size*random(0.4,0.7), size*random(0.4,0.7)); 
          segements[i].translate(xpos+random(-spread,spread), ypos+random(-spread,spread));
          segements[i].rotate(radians(random(-20,50)));
+         segements[i].setStroke(fill);
          segements[i].setFill(color(fill + random(-5,5)));
       }
    }
