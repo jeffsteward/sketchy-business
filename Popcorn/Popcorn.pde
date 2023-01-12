@@ -2,6 +2,8 @@ import java.util.Random;
 
 ArrayList<Cloud> clouds = new ArrayList<Cloud>();
 
+PVector click;
+
 boolean animate = true;
 
 void setup() {
@@ -19,10 +21,22 @@ void draw() {
     }
     c.display();
   }
+  
+  if (mousePressed) {
+    stroke(0);
+    line(click.x, click.y, mouseX, mouseY);
+  }  
 }
 
 void mousePressed() {
-  clouds.add(new Cloud(mouseX, mouseY, int(random(100, 200)), int(random(5, 30)))); 
+  click = new PVector(mouseX, mouseY);
+}
+
+void mouseReleased() {
+  PVector release = new PVector(mouseX, mouseY);
+  float d = abs(release.dist(click));
+  
+  clouds.add(new Cloud(int(click.x), int(click.y), int(random(100, 200)), int(d))); 
 }
 
 void keyPressed() {
@@ -48,30 +62,26 @@ class Cloud {
   int xpos, ypos;
   int density = 25;
   int size = 100;
-  int spread = size/5;
   
    Cloud(int x, int y, int d, int s) {
       xpos = x;
       ypos = y;
       density = d;
-      size = s;
-      spread = size/5;
-      
-      //fill = int(map(y, 0, height, 0, 255));
-      
+      size = s*2;
       createCloud();
    }
    
    void createCloud() {
       segments = new PShape[density];
 
-      segments[0] = createShape(ELLIPSE, 0, 0, size*10, size*10); 
+      segments[0] = createShape(ELLIPSE, 0, 0, size, size); 
       segments[0].translate(xpos, ypos);
+      segments[0].setStroke(fill);
       segments[0].setFill(color(fill + random(-5,5)));
       
       int angle;
       int x, y;
-      int s = size;
+      int s = size/2;
       for (int i=1;i<density;i++) {
          angle = int(random(0, 360));
          s = abs(s - i*2);
@@ -80,6 +90,7 @@ class Cloud {
          
          segments[i] = createShape(ELLIPSE, 0, 0, s, s); 
          segments[i].translate(x, y);
+         segments[i].setStroke(fill);
          segments[i].setFill(color(fill + random(-3,3)));
       }     
       
