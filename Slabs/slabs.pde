@@ -2,13 +2,19 @@ ArrayList<Slab> slabs = new ArrayList<Slab>();
 
 boolean animate = true;
 
+PVector click;
+
 void setup() {
     size(1700, 1000);
     rectMode(CENTER);
 }
 
 void mousePressed() {
-    slabs.add(new Slab(mouseX, mouseY));
+    click = new PVector(mouseX, mouseY);
+}
+
+void mouseReleased() {
+    slabs.add(new Slab(int(click.x), int(click.y), mouseX, mouseY));
 }
 
 void keyPressed() {
@@ -31,16 +37,21 @@ void draw() {
     for (Slab s : slabs) {
       s.display(); //<>//
     };
+    
+    if (mousePressed) {
+       stroke(0);
+       line(click.x, click.y, mouseX, mouseY);
+    }   
 }
 
 class Slab {
-    int xpos, ypos;
+    PVector pos, pos2;
     PShape slab;
 
-    Slab(int x, int y) {
-        xpos = x;
-        ypos = y;       
-        
+    Slab(int x, int y, int x2, int y2) {
+        pos = new PVector(x, y);
+        pos2 = new PVector(x2, y2);
+      
         create();
     }
 
@@ -50,7 +61,7 @@ class Slab {
         PShape upper, lower;
 
         ul = new PVector(0, 0);
-        ur = PVector.add(ul, new PVector(random(ul.x+20, 420), random(ul.y+10, ul.y+80)));
+        ur = PVector.sub(pos2, pos);
         
         float slabWidth = ul.dist(ur);
         PVector tilt = PVector.sub(ur, ul);
@@ -92,7 +103,7 @@ class Slab {
 
     void display() {
         slab.resetMatrix();
-        slab.translate(xpos, ypos);
+        slab.translate(pos.x, pos.y);
         shape(slab);
     }
 }
