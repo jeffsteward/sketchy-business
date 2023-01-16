@@ -18,14 +18,26 @@ void setup() {
   ControlFont font = new ControlFont(pfont, 20);
   
   cp5 = new ControlP5(this);
+
   cp5.addSlider("size")
       .setBroadcast(false)
+      .setPosition(25, 25)
       .setFont(font)
-      .setHeight(50)
+      .setHeight(35)
       .setWidth(200)
       .setRange(10, width/2)
       .setValue(250.0)
       .setBroadcast(true);
+
+  cp5.addToggle("animate")
+      .setBroadcast(false)
+      .setPosition(350, 25)
+      .setFont(font)
+      .setLabelVisible(false)
+      .setHeight(35)
+      .setWidth(100)
+      .setMode(ControlP5.SWITCH)
+      .setBroadcast(true);  
   
   buildPonds();
 }
