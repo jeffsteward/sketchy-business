@@ -1,30 +1,59 @@
+import controlP5.*;
+
 ArrayList<Cluster> clusters = new ArrayList<Cluster>();
 
+ControlP5 cp5;
+
 boolean animate = true;
-int maxSize = 250;
-int offset = maxSize/2;
+float size = 250.0;
+int offset = int(size/2);
+int panelHeight = 100;
 
 void setup() {
   size(1700, 1000, P2D);
   noCursor();
   rectMode(CENTER);
+
+  PFont pfont = createFont("Arial", 20, true);
+  ControlFont font = new ControlFont(pfont, 20);
+  
+  cp5 = new ControlP5(this);
+  cp5.addSlider("size")
+      .setBroadcast(false)
+      .setFont(font)
+      .setHeight(50)
+      .setWidth(200)
+      .setRange(10, width/2)
+      .setValue(250.0)
+      .setBroadcast(true);
   
   buildPonds();
 }
 
 void buildPonds() {
-  int columns = width/maxSize;
-  int rows = height/maxSize;
+  int columns = int(width/size);
+  int rows = int((height-panelHeight)/size);
   
   for (int i=0; i<rows; i++) {
     for (int j=0; j<columns; j++) {
-      clusters.add(new Cluster((j*maxSize + offset), (i*maxSize + offset), maxSize));
+      clusters.add(new Cluster(int(j*size + offset), int(i*size + offset), int(size)));
     }
   }  
 }
 
+void size(float s) {
+  size = s;
+  offset = int(size)/2;
+  
+  clusters.clear();
+  buildPonds();
+}
+
 void draw() {
   background(100);
+  
+  pushMatrix();  
+  translate(0, panelHeight);
   
   for (Cluster c : clusters) {
     if (animate) {
@@ -32,6 +61,8 @@ void draw() {
     }
     c.display();
   }
+  
+  popMatrix();
   
   stroke(0);
   fill(255);
