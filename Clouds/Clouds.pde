@@ -1,24 +1,55 @@
+import controlP5.*;
+
 ArrayList<Cloud> clouds = new ArrayList<Cloud>();
 
+ControlP5 cp5;
+
 PVector click;
+int colorMin = 0;
+int colorMax = 255;
 
 void setup() {
   size(1700, 1000);
   rectMode(CENTER);
   
   noStroke();
+  
+  PFont pfont = createFont("Arial", 20, true);
+  ControlFont font = new ControlFont(pfont, 20);
+  
+  cp5 = new ControlP5(this);
+  
+  cp5.addRange("cloudColors")
+             .setBroadcast(false) 
+             .setFont(font)
+             .setLabel("Color Range")
+             .setPosition(50,50)
+             .setSize(400,40)
+             .setHandleSize(20)
+             .setRange(0,255)
+             .setRangeValues(50,100)
+             .setBroadcast(true);  
 }
 
 void draw() {
   background(100);
 
+  noStroke();
+
   for (Cloud c : clouds) {
     c.display();
   }
   
-  if (mousePressed) {
+  if (mousePressed && !cp5.isMouseOver()) {
     stroke(0);
     line(click.x, click.y, mouseX, mouseY);
+  }
+}
+
+void controlEvent(ControlEvent theControlEvent) {
+  if(theControlEvent.isFrom("cloudColors")) {
+    colorMin = int(theControlEvent.getController().getArrayValue(0));
+    colorMax = int(theControlEvent.getController().getArrayValue(1));
   }
 }
 
@@ -27,10 +58,12 @@ void mousePressed() {
 }
 
 void mouseReleased() {
-  PVector release = new PVector(mouseX, mouseY);
-  float d = abs(release.dist(click));
+  if (!cp5.isMouseOver()) {
+    PVector release = new PVector(mouseX, mouseY);
+    float d = abs(release.dist(click));
   
-  clouds.add(new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d))); 
+    clouds.add(new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d)));
+  }
 }
 
 void keyPressed() {
@@ -51,7 +84,7 @@ void keyPressed() {
 
 class Cloud {
   PShape[] segements;
-  int fill = int(random(0,255));
+  int fill = int(random(colorMin,colorMax));
   int xpos, ypos;
   int density = 25;
   int size = 100;
@@ -70,15 +103,13 @@ class Cloud {
          segements[i].translate(xpos+random(-spread,spread), ypos+random(-spread,spread));
          segements[i].rotate(radians(random(-20,50)));
          segements[i].setStroke(fill);
-         segements[i].setFill(color(fill + random(-5,5)));
+         segements[i].setFill(color(fill + random(-5,5), 255));
       }
    }
    
    void display() {
-     noStroke();
-     
      for (int i=0; i<density; i++) {
-        shape(segements[i]); 
+       shape(segements[i]); 
      }
    }
 }
