@@ -8,10 +8,11 @@ PVector click;
 int colorMin = 0;
 int colorMax = 255;
 
+boolean showBoundingBoxes = false;
+
 void setup() {
   size(1700, 1000);
   rectMode(CENTER);
-  
   noStroke();
   
   PFont pfont = createFont("Arial", 20, true);
@@ -61,8 +62,10 @@ void mouseReleased() {
   if (!cp5.isMouseOver()) {
     PVector release = new PVector(mouseX, mouseY);
     float d = abs(release.dist(click));
-  
-    clouds.add(new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d)));
+    
+    Cloud c = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d));
+    c.showBoundingBox(showBoundingBoxes);
+    clouds.add(c);
   }
 }
 
@@ -70,6 +73,12 @@ void keyPressed() {
     switch (key) {
     case 'a': 
       // do something here
+      break;
+    case 'b':
+      showBoundingBoxes = !showBoundingBoxes;
+      for (Cloud c : clouds) {
+        c.showBoundingBox(showBoundingBoxes);
+      }
       break;
     case 'c': 
       clouds.clear();
@@ -89,7 +98,14 @@ class Cloud {
   int density = 25;
   int size = 100;
   int spread = size/5;
+  
+  int maxY, maxX, minY, minX;
+  int xOffset, yOffset;
+  
+  boolean showBB = false;
+  
   PGraphics pg;
+  
    Cloud(int x, int y, int d, int s) {
       xpos = x;
       ypos = y;
@@ -110,34 +126,98 @@ class Cloud {
    }
    
    void _calculateBoundingBox() {     
-     pg = createGraphics(size, size);
+     int buffer = round(size*0.15);
+     
+     pg = createGraphics(size+buffer, size+buffer);
      pg.beginDraw();
      pg.background(255, 0, 0);
      pg.pushMatrix();
-     pg.translate(size/2, size/2);
+     pg.translate(pg.width/2, pg.height/2);
      for (int i=0; i<density; i++) {
        pg.shape(segements[i]); 
      }     
      pg.popMatrix();
      pg.endDraw();
      pg.loadPixels();
-     int c;
-     for (int i=0; i<pg.width; i++) {
-       for (int j=0; j<pg.height; j++) {
-          c = pg.get(i, j);
-             //println(c); 
+
+     maxY = _findBBBottom();
+     maxX = _findBBRight();
+     minX = _findBBLeft();
+     minY = _findBBTop();     
+
+     // since clouds are asymetrical
+     // find the offset from center for the box
+     xOffset = ((maxX - pg.width/2) - (pg.width/2 - minX))/2;
+     yOffset = ((maxY - pg.height/2) - (pg.height/2 - minY))/2;
+
+     maxX = maxX - minX;
+     maxY = maxY - minY;
+     minX = 0;
+     minY = 0;
+   }
+
+   int _findBBBottom() {
+     for (int y=pg.height-1; y>=0; y--) {
+       for (int x=0; x<pg.width; x++) {
+         if (pg.get(x, y) != -65536) {
+           return y;
+         }
        }
      }
-     
-     
+     return 0;
+   }
+   
+   int _findBBRight() {
+     for (int x=pg.width-1; x>=0; x--) {
+       for (int y=0; y<maxY; y++) {
+         if (pg.get(x, y) != -65536) {
+           return x;
+         }
+       }
+     }
+     return 0;     
+   }
+   
+   int _findBBTop() {
+     for (int y=0; y<maxY; y++) {
+       for (int x=0; x<maxX; x++) {
+         if (pg.get(x, y) != -65536) {
+           return y;
+         }       
+       }
+     }
+     return 0;
+   }
+   
+   int _findBBLeft() {
+     for (int x=0; x<maxX; x++) {
+       for (int y=0; y<maxY; y++) {
+         if (pg.get(x, y) != -65536) {
+           return x;
+         }              
+       }
+     }
+     return 0;
+   }
+   
+   void showBoundingBox(boolean b) {
+     showBB = b;
    }
    
    void display() {
      pushMatrix();
+
      translate(xpos, ypos);
      for (int i=0; i<density; i++) {
        shape(segements[i]); 
      }
+      
+     if (showBB) {
+       stroke(0);
+       fill(0,0,0,0);
+       rect(minX+xOffset, minY+yOffset, maxX, maxY);
+     }
+     
      popMatrix();
    }
 }
