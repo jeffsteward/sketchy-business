@@ -94,7 +94,7 @@ void keyPressed() {
 
 
 class Cloud {
-  PShape[] segements;
+  PShape[] segments;
   int fill = int(random(colorMin,colorMax));
   int xpos, ypos;
   int density = 25;
@@ -115,13 +115,13 @@ class Cloud {
       size = s*2;
       spread = size/5;
       
-      segements = new PShape[density];
+      segments = new PShape[density];
       for (int i=0;i<density;i++) {
-         segements[i] = createShape(ELLIPSE, 0, 0, size*random(0.4,0.7), size*random(0.4,0.7)); 
-         segements[i].translate(random(-spread,spread), random(-spread,spread));
-         segements[i].rotate(radians(random(-20,50)));
-         segements[i].setStroke(fill);
-         segements[i].setFill(color(fill + random(-5,5), 255));
+         segments[i] = createShape(ELLIPSE, 0, 0, size*random(0.4,0.7), size*random(0.4,0.7)); 
+         segments[i].translate(random(-spread,spread), random(-spread,spread));
+         segments[i].rotate(radians(random(-20,50)));
+         segments[i].setStroke(fill);
+         segments[i].setFill(color(fill + random(-5,5), 255));
       }
       
       _calculateBoundingBox();
@@ -136,7 +136,7 @@ class Cloud {
      pg.pushMatrix();
      pg.translate(pg.width/2, pg.height/2);
      for (int i=0; i<density; i++) {
-       pg.shape(segements[i]); 
+       pg.shape(segments[i]); 
      }     
      pg.popMatrix();
      pg.endDraw();
@@ -211,7 +211,7 @@ class Cloud {
 
      translate(xpos, ypos);
      for (int i=0; i<density; i++) {
-       shape(segements[i]); 
+       shape(segments[i]); 
      }
       
      if (showBB) {
