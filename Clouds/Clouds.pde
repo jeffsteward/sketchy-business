@@ -63,9 +63,11 @@ void mouseReleased() {
     PVector release = new PVector(mouseX, mouseY);
     float d = abs(release.dist(click));
     
-    Cloud c = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d));
-    c.showBoundingBox(showBoundingBoxes);
-    clouds.add(c);
+    if (d > 0) {
+      Cloud c = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d));
+      c.showBoundingBox(showBoundingBoxes);
+      clouds.add(c);
+    }
   }
 }
 
