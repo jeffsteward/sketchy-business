@@ -129,7 +129,8 @@ class Cloud {
    
    void _calculateBoundingBox() {     
      int buffer = round(size*0.15);
-     
+
+     // render the cloud to a graphics buffer
      pg = createGraphics(size+buffer, size+buffer);
      pg.beginDraw();
      pg.background(255, 0, 0);
@@ -140,15 +141,19 @@ class Cloud {
      }     
      pg.popMatrix();
      pg.endDraw();
+     
+     // load the cloud as a raster
      pg.loadPixels();
 
+     // use a scanline/sweepline technique 
+     // to find the extents of the cloud
      maxY = _findBBBottom();
      maxX = _findBBRight();
      minX = _findBBLeft();
      minY = _findBBTop();     
 
      // since clouds are asymetrical
-     // find the offset from center for the box
+     // find the offset from center for the bounding box
      xOffset = ((maxX - pg.width/2) - (pg.width/2 - minX))/2;
      yOffset = ((maxY - pg.height/2) - (pg.height/2 - minY))/2;
 
