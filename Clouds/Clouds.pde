@@ -4,6 +4,8 @@ ArrayList<Cloud> clouds = new ArrayList<Cloud>();
 
 ControlP5 cp5;
 
+boolean animate = false;
+boolean isHudVisible = true;
 PVector click;
 int colorMin = 0;
 int colorMax = 255;
@@ -38,6 +40,9 @@ void draw() {
   noStroke();
 
   for (Cloud c : clouds) {
+    if (animate) {
+      c.update();
+    }
     c.display();
   }
   
@@ -74,7 +79,7 @@ void mouseReleased() {
 void keyPressed() {
     switch (key) {
     case 'a': 
-      // do something here
+      animate = !animate;
       break;
     case 'b':
       showBoundingBoxes = !showBoundingBoxes;
@@ -84,6 +89,10 @@ void keyPressed() {
       break;
     case 'c': 
       clouds.clear();
+      break;
+    case 'h':
+      isHudVisible = !isHudVisible;
+      cp5.setVisible(isHudVisible);
       break;
     case 's':
       save("output/frame" + frameCount + ".png");
@@ -206,14 +215,18 @@ class Cloud {
      }
      return 0;
    }
-   
+      
    void showBoundingBox(boolean b) {
      showBB = b;
    }
    
+   void update() {
+     xpos +=size/50;
+   }
+   
    void display() {
      pushMatrix();
-
+    
      translate(xpos, ypos);
      for (int i=0; i<density; i++) {
        shape(segments[i]); 
