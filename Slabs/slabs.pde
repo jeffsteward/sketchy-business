@@ -1,6 +1,9 @@
 ArrayList<Slab> slabs = new ArrayList<Slab>();
 
+Slab preview;
+
 boolean animate = true;
+boolean showPreview = true;
 
 PVector click;
 
@@ -14,7 +17,11 @@ void mousePressed() {
 }
 
 void mouseReleased() {
-    slabs.add(new Slab(int(click.x), int(click.y), mouseX, mouseY));
+    slabs.add(preview);
+}
+
+void mouseDragged() {
+    preview = new Slab(int(click.x), int(click.y), mouseX, mouseY);
 }
 
 void keyPressed() {
@@ -24,6 +31,9 @@ void keyPressed() {
       break;
     case 'c': 
       slabs.clear();
+      break;
+    case 'p':
+      showPreview = !showPreview;
       break;
     case 's':
       save("output/frame" + frameCount + ".png");
@@ -39,8 +49,12 @@ void draw() {
     };
     
     if (mousePressed) {
-       stroke(0);
-       line(click.x, click.y, mouseX, mouseY);
+      if (showPreview && preview != null) {
+        preview.display();
+      } else {
+        stroke(0);
+        line(click.x, click.y, mouseX, mouseY);
+      }
     }   
 }
 
