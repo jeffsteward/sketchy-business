@@ -17,7 +17,10 @@ void mousePressed() {
 }
 
 void mouseReleased() {
-    slabs.add(preview);
+    if (preview != null) {
+      slabs.add(preview);
+      preview = null;
+    }
 }
 
 void mouseDragged() {
