@@ -4,8 +4,11 @@ ArrayList<Cloud> clouds = new ArrayList<Cloud>();
 
 ControlP5 cp5;
 
+Cloud preview;
+
 boolean animate = false;
 boolean isHudVisible = true;
+boolean showPreview = true;
 PVector click;
 int colorMin = 0;
 int colorMax = 255;
@@ -47,8 +50,12 @@ void draw() {
   }
   
   if (mousePressed && !cp5.isMouseOver()) {
-    stroke(0);
-    line(click.x, click.y, mouseX, mouseY);
+    if (showPreview && preview != null) {
+      preview.display();
+    } else {
+      stroke(0);
+      line(click.x, click.y, mouseX, mouseY);
+    }
   }
 }
 
@@ -65,15 +72,23 @@ void mousePressed() {
 
 void mouseReleased() {
   if (!cp5.isMouseOver()) {
+    if (preview != null) {
+      clouds.add(preview);
+      preview = null;
+    }
+  }
+}
+
+void mouseDragged() {
+  if (!cp5.isMouseOver()) {
     PVector release = new PVector(mouseX, mouseY);
     float d = abs(release.dist(click));
     
     if (d > 0) {
-      Cloud c = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d));
-      c.showBoundingBox(showBoundingBoxes);
-      clouds.add(c);
+      preview = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d));
+      preview.showBoundingBox(showBoundingBoxes);
     }
-  }
+  }  
 }
 
 void keyPressed() {
@@ -93,6 +108,9 @@ void keyPressed() {
     case 'h':
       isHudVisible = !isHudVisible;
       cp5.setVisible(isHudVisible);
+      break;
+    case 'p':
+      showPreview = !showPreview;
       break;
     case 's':
       save("output/frame" + frameCount + ".png");
@@ -124,6 +142,11 @@ class Cloud {
       size = s*2;
       spread = size/5;
       
+      create();
+      _calculateBoundingBox();
+   }
+   
+   void create() {
       segments = new PShape[density];
       for (int i=0;i<density;i++) {
          segments[i] = createShape(ELLIPSE, 0, 0, size*random(0.4,0.7), size*random(0.4,0.7)); 
@@ -132,8 +155,6 @@ class Cloud {
          segments[i].setStroke(fill);
          segments[i].setFill(color(fill + random(-5,5), 255));
       }
-      
-      _calculateBoundingBox();
    }
    
    void _calculateBoundingBox() {     
@@ -215,7 +236,7 @@ class Cloud {
      }
      return 0;
    }
-      
+        
    void showBoundingBox(boolean b) {
      showBB = b;
    }
