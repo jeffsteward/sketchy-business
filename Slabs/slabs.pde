@@ -46,6 +46,11 @@ void keyPressed() {
     case 'p':
       showPreview = !showPreview;
       break;
+    case 'r':
+      for (Slab s : slabs) {
+        s.setPosition(new PVector(random(0, width), random(0, height)));
+      }
+      break;      
     case 's':
       save("output/frame" + frameCount + ".png");
     default:
@@ -165,6 +170,12 @@ class Slab {
       maxY = h;
       minY = 0;
     }
+   
+    void setPosition(PVector p) {
+     pos.x = int(p.x);
+     pos.y = int(p.y);
+    }
+  
    
     void showBoundingBox(boolean b) {
       showBB = b;
