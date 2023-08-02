@@ -112,6 +112,11 @@ void keyPressed() {
     case 'p':
       showPreview = !showPreview;
       break;
+    case 'r':
+      for (Cloud c : clouds) {
+        c.setPosition(new PVector(random(0, width), random(0, height)));
+      }
+      break;
     case 's':
       save("output/frame" + frameCount + ".png");
     default:
@@ -236,7 +241,12 @@ class Cloud {
      }
      return 0;
    }
-        
+
+   void setPosition(PVector p) {
+     xpos = int(p.x);
+     ypos = int(p.y);
+   }
+   
    void showBoundingBox(boolean b) {
      showBB = b;
    }
