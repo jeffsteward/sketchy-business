@@ -85,7 +85,7 @@ void mouseDragged() {
     float d = abs(release.dist(click));
     
     if (d > 0) {
-      preview = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d));
+      preview = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d), int(random(colorMin,colorMax)));
       preview.showBoundingBox(showBoundingBoxes);
     }
   }  
@@ -127,7 +127,7 @@ void keyPressed() {
 
 class Cloud {
   PShape[] segments;
-  int fill = int(random(colorMin,colorMax));
+  int fill;
   int xpos, ypos;
   int density = 25;
   int size = 100;
@@ -140,12 +140,14 @@ class Cloud {
   
   PGraphics pg;
   
-   Cloud(int x, int y, int d, int s) {
+   Cloud(int x, int y, int d, int s, int c) {
       xpos = x;
       ypos = y;
       density = d;
       size = s*2;
       spread = size/5;
+      
+      fill = c;
       
       create();
       _calculateBoundingBox();

@@ -5,6 +5,8 @@ Slab preview;
 boolean animate = true;
 boolean showPreview = true;
 PVector click;
+int colorMin = 0;
+int colorMax = 255;
 
 boolean showBoundingBoxes = false;
 
@@ -25,7 +27,7 @@ void mouseReleased() {
 }
 
 void mouseDragged() {
-    preview = new Slab(int(click.x), int(click.y), mouseX, mouseY);
+    preview = new Slab(int(click.x), int(click.y), mouseX, mouseY, int(random(colorMin, colorMax)));
     preview.showBoundingBox(showBoundingBoxes);
 }
 
@@ -81,14 +83,18 @@ class Slab {
     PVector pos, pos2;
     PShape slab;
     
+    int fill;
+    
     int maxY = 0, maxX = 0, minY = 0, minX = 0;
     int xOffset = 0, yOffset = 0;
 
     boolean showBB = false;
 
-    Slab(int x, int y, int x2, int y2) {
+    Slab(int x, int y, int x2, int y2, int c) {
         pos = new PVector(x, y);
         pos2 = new PVector(x2, y2);
+        
+        fill = c;
       
         create();
         _calculateBoundingBox();
@@ -114,7 +120,6 @@ class Slab {
         br = new PVector(ur.x, ur.y);
         br.add(0, abs(ll.y*2));
 
-        float fill = random(200, 255);
         upper = createShape();
         upper.beginShape(QUAD);
         upper.fill(fill);
