@@ -15,5 +15,10 @@ A series of experiments made with [Processing](https://processing.org/)
 
 ![Still image of geometric shapes](Slabs/output/frame4161.png)
 
+## Painter
+
+![Still image of geometric shapes](Painter/output/frame866.png)
+![Still image of geometric shapes](Painter/output/frame2159.png)
+
 ## Reference Material
 [Calculate bounding box of arbitrary pixel-based drawing](https://stackoverflow.com/a/10994458/303873)
