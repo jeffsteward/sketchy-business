@@ -7,7 +7,8 @@ class Cloud implements Stamp {
   int xpos, ypos;
   int density = 25;
   int size = 100;
-  int spread = size/5;
+  int spreadX = size/5;
+  int spreadY = size/5;
   
   int maxY, maxX, minY, minX;
   int xOffset, yOffset;
@@ -20,12 +21,13 @@ class Cloud implements Stamp {
   PGraphics pg;
   PGraphics pgBuffer;
   
-   Cloud(int x, int y, int d, int r, color c, int cv) {
+   Cloud(int x, int y, int d, int r, int h, color c, int cv) {
       xpos = x;
       ypos = y;
       density = d;
       size = r*2;
-      spread = size/5;
+      spreadX = size/5;
+      spreadY = h/5;
       colorVariation = cv;
       
       fill = c;
@@ -39,7 +41,7 @@ class Cloud implements Stamp {
       segments = new PShape[density];
       for (int i=0;i<density;i++) {
          segments[i] = createShape(ELLIPSE, 0, 0, size*random(0.4,0.7), size*random(0.4,0.7)); 
-         segments[i].translate(random(-spread,spread), random(-spread,spread));
+         segments[i].translate(random(-spreadX,spreadX), random(-spreadY,spreadY));
          segments[i].rotate(radians(random(-20,50)));
          segments[i].setStroke(fill);
          int v = int(random(-colorVariation,colorVariation));
