@@ -20,11 +20,11 @@ class Cloud implements Stamp {
   PGraphics pg;
   PGraphics pgBuffer;
   
-   Cloud(int x, int y, int d, int s, color c, int cv) {
+   Cloud(int x, int y, int d, int r, color c, int cv) {
       xpos = x;
       ypos = y;
       density = d;
-      size = s*2;
+      size = r*2;
       spread = size/5;
       colorVariation = cv;
       

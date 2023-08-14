@@ -1,15 +1,19 @@
 import controlP5.*;
 
 ArrayList<Stamp> stamps = new ArrayList<Stamp>();
+Ink drawing;
 
 ControlP5 cp5;
 
 Stamp preview;
 
-float currentStamp = 0.0;
+final float STAMP_CLOUD = 0.0;
+final float STAMP_SLAB = 1.0;
+float currentStamp = STAMP_CLOUD;
 
 final float MODE_CREATE = 0.0;
 final float MODE_ARRANGE = 1.0;
+final float MODE_DRAW = 2.0;
 float currentMode = MODE_CREATE;
 
 float backgroundColor = 100.0;
@@ -31,6 +35,8 @@ void setup() {
   fullScreen(2);
   rectMode(CENTER);
   noStroke();
+  
+  drawing = new Ink();
   
   PFont pfont = createFont("Arial", 20, true);
   ControlFont font = new ControlFont(pfont, 20);
@@ -76,7 +82,7 @@ void setup() {
              .setPosition(220, 130)
              .setSize(400,30)
              .addItems(split("Cloud Slab", " "))
-             .setDefaultValue(0.0)
+             .setDefaultValue(STAMP_CLOUD)
              .setBroadcast(true);               
 
    cp5.addButtonBar("currentMode")
@@ -84,8 +90,8 @@ void setup() {
              .setFont(font)
              .setPosition(220, 170)
              .setSize(400,30)
-             .addItems(split("Create Arrange", " "))
-             .setDefaultValue(0.0)
+             .addItems(split("Create Arrange Draw", " "))
+             .setDefaultValue(MODE_CREATE)
              .setBroadcast(true);  
 
   cp5.addColorWheel("colorWheel")
@@ -112,17 +118,31 @@ void draw() {
     s.display();
   }
   
-  if (mousePressed && !cp5.isMouseOver()) {
-    if (showPreview && preview != null) {
-      preview.display();
-    } else {
+  
+  if (currentMode == MODE_CREATE) {
+    if (mousePressed && !cp5.isMouseOver()) {
+      if (showPreview && preview != null) {
+        preview.display();
+      } 
+      
       stroke(0);
       line(click.x, click.y, mouseX, mouseY);
     }
   }
+  
+  drawing.update();
+  drawing.display();
 }
 
 void controlEvent(ControlEvent theControlEvent) {
+  if(theControlEvent.isFrom("currentMode")) {
+     if (currentMode == MODE_DRAW) {
+       drawing.startDrawing();
+     } else {
+       drawing.stopDrawing();
+     }    
+  }
+  
   if(theControlEvent.isFrom("stampColors")) {
     colorMin = int(theControlEvent.getController().getArrayValue(0));
     colorMax = int(theControlEvent.getController().getArrayValue(1));
@@ -130,6 +150,7 @@ void controlEvent(ControlEvent theControlEvent) {
 
   if(theControlEvent.isFrom("colorWheel")) {
     wheelColor = cp5.get(ColorWheel.class,"colorWheel").getRGB();  
+    drawing.setColor(color(wheelColor));
   }
 }
 
@@ -157,7 +178,7 @@ void mouseReleased() {
         stamps.add(preview);
         preview = null;
       }
-    }
+    } 
   }
 }
 
@@ -169,15 +190,17 @@ void mouseDragged() {
       float d = abs(release.dist(click));
       
       if (d > 0) {
-        if (currentStamp == 0.0) {
-          preview = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d), color(wheelColor), int(colorVariation));
+        if (currentStamp == STAMP_CLOUD) {
+            preview = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d), color(wheelColor), int(colorVariation));
         } else {
-          preview = new Slab(int(click.x), int(click.y), mouseX, mouseY, int(random(colorMin, colorMax)));
+            preview = new Slab(int(click.x), int(click.y), mouseX, mouseY, int(random(colorMin, colorMax)));
         }
         preview.showBoundingBox(showBoundingBoxes);
       }
-    }
-  }  
+    } else if (currentMode == MODE_DRAW) {
+        
+    }      
+  }
 }
 
 void keyPressed() {
@@ -200,6 +223,7 @@ void keyPressed() {
       break;
     case 'c': 
       stamps.clear();
+      drawing.clear();
       break;
     case 'h':
       isHudVisible = !isHudVisible;
