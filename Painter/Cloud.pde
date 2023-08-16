@@ -27,7 +27,7 @@ class Cloud implements Stamp {
       density = d;
       size = r*2;
       spreadX = size/5;
-      spreadY = h/5;
+      spreadY = h/2;
       colorVariation = cv;
       
       fill = c;
@@ -35,6 +35,10 @@ class Cloud implements Stamp {
       create();
       _calculateBoundingBox();
       //_fillBuffer();
+   }
+   
+   String type() {
+     return "Cloud";
    }
    
    void create() {

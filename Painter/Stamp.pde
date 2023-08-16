@@ -5,6 +5,7 @@ interface Stamp {
   boolean isMouseOver();
   boolean isDragging();
   boolean isAnimating();
+  String type();
   void startAnimating();
   void stopAnimating();
   void startDragging();

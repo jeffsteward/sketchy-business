@@ -22,6 +22,11 @@ class Slab implements Stamp {
         _calculateBoundingBox();
     }
 
+
+   String type() {
+     return "Slab";
+   }
+
     void create() {
         PVector ul, ur, ll, lr;
         PVector bl, br;

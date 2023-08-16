@@ -14,6 +14,7 @@ float currentStamp = STAMP_CLOUD;
 final float MODE_CREATE = 0.0;
 final float MODE_ARRANGE = 1.0;
 final float MODE_DRAW = 2.0;
+final float MODE_ERASE = 3.0;
 float currentMode = MODE_CREATE;
 
 float backgroundColor = 100.0;
@@ -90,7 +91,7 @@ void setup() {
              .setFont(font)
              .setPosition(220, 170)
              .setSize(400,30)
-             .addItems(split("Create Arrange Draw", " "))
+             .addItems(split("Create Arrange Draw Erase", " "))
              .setDefaultValue(MODE_CREATE)
              .setBroadcast(true);  
 
@@ -136,10 +137,14 @@ void draw() {
 
 void controlEvent(ControlEvent theControlEvent) {
   if(theControlEvent.isFrom("currentMode")) {
-     if (currentMode == MODE_DRAW) {
-       drawing.startDrawing();
+     if (currentMode == MODE_DRAW) { 
+         drawing.stopErasing();  
+         drawing.startDrawing();
+     } else if (currentMode == MODE_ERASE) {
+         drawing.stopDrawing();  
+         drawing.startErasing();
      } else {
-       drawing.stopDrawing();
+         drawing.liftPen();
      }    
   }
   
@@ -165,6 +170,13 @@ void mousePressed() {
         s.startDragging();
       }
     }
+  } else if (currentMode == MODE_ERASE) {
+    for (int i = stamps.size() - 1; i >= 0; i--) {
+      Stamp s = stamps.get(i);
+      if (s.isMouseOver()) {
+        stamps.remove(i);
+      }
+    }      
   }
 }
 
@@ -191,7 +203,8 @@ void mouseDragged() {
       
       if (d > 0) {
         if (currentStamp == STAMP_CLOUD) {
-            preview = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d), color(wheelColor), int(colorVariation));
+            PVector diff = release.sub(click);
+            preview = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d), abs(int(diff.y)), color(wheelColor), int(colorVariation));
         } else {
             preview = new Slab(int(click.x), int(click.y), mouseX, mouseY, int(random(colorMin, colorMax)));
         }
@@ -224,6 +237,12 @@ void keyPressed() {
     case 'c': 
       stamps.clear();
       drawing.clear();
+      break;
+    case 'd':
+      drawing.startDrawing();
+      break;
+    case 'e':
+      drawing.startErasing();
       break;
     case 'h':
       isHudVisible = !isHudVisible;
