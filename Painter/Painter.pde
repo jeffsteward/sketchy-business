@@ -62,8 +62,8 @@ void setup() {
              .setPosition(220,50)
              .setSize(400,30)
              .setHandleSize(20)
-             .setRange(0,50)
-             .setDefaultValue(backgroundColor)
+             .setRange(0,100)
+             .setDefaultValue(colorVariation)
              .setBroadcast(true);               
              
   cp5.addRange("stampColors")
@@ -148,10 +148,10 @@ void controlEvent(ControlEvent theControlEvent) {
      }    
   }
   
-  if(theControlEvent.isFrom("stampColors")) {
-    colorMin = int(theControlEvent.getController().getArrayValue(0));
-    colorMax = int(theControlEvent.getController().getArrayValue(1));
-  }
+  //if(theControlEvent.isFrom("stampColors")) {
+  //  colorMin = int(theControlEvent.getController().getArrayValue(0));
+  //  colorMax = int(theControlEvent.getController().getArrayValue(1));
+  //}
 
   if(theControlEvent.isFrom("colorWheel")) {
     wheelColor = cp5.get(ColorWheel.class,"colorWheel").getRGB();  
@@ -206,7 +206,7 @@ void mouseDragged() {
             PVector diff = release.sub(click);
             preview = new Cloud(int(click.x), int(click.y), int(random(5, 50)), int(d), abs(int(diff.y)), color(wheelColor), int(colorVariation));
         } else {
-            preview = new Slab(int(click.x), int(click.y), mouseX, mouseY, int(random(colorMin, colorMax)));
+            preview = new Slab(int(click.x), int(click.y), mouseX, mouseY, color(wheelColor), int(colorVariation));
         }
         preview.showBoundingBox(showBoundingBoxes);
       }

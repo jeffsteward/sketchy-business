@@ -2,7 +2,10 @@ class Slab implements Stamp {
     PVector pos, pos2;
     PShape slab;
     
-    int fill;
+    color fillUpper;
+    color fillLower;
+    int colorVariation;
+    int colorVariationLower;
     
     int maxY = 0, maxX = 0, minY = 0, minX = 0;
     int xOffset = 0, yOffset = 0;
@@ -12,12 +15,16 @@ class Slab implements Stamp {
     boolean isDragging = false;
     boolean isAnimating = false;
 
-    Slab(int x, int y, int x2, int y2, int c) {
+    Slab(int x, int y, int x2, int y2, color c, int cv) {
         pos = new PVector(x, y);
         pos2 = new PVector(x2, y2);
         
-        fill = c;
-      
+        colorVariation = int(random(-cv, cv));
+        fillUpper = color(red(c)+colorVariation, green(c)+colorVariation, blue(c)+colorVariation);
+        
+        colorVariationLower = int(random(-65, -55));
+        fillLower = color(red(fillUpper)+colorVariationLower, green(fillUpper)+colorVariationLower, blue(fillUpper)+colorVariationLower);
+        
         create();
         _calculateBoundingBox();
     }
@@ -49,7 +56,7 @@ class Slab implements Stamp {
 
         upper = createShape();
         upper.beginShape(QUAD);
-        upper.fill(fill);
+        upper.fill(fillUpper);
         upper.stroke(0);
         upper.vertex(ll.x, ll.y);
         upper.vertex(lr.x, lr.y);        
@@ -59,7 +66,7 @@ class Slab implements Stamp {
 
         lower = createShape();
         lower.beginShape(QUAD);
-        lower.fill(random(fill-65,fill-55));
+        lower.fill(fillLower);
         lower.stroke(0);
         lower.vertex(br.x, br.y);
         lower.vertex(bl.x, bl.y);
