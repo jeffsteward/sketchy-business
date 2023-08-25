@@ -20,9 +20,6 @@ float currentMode = MODE_CREATE;
 float backgroundColor = 100.0;
 float colorVariation = 25.0;
 
-float colorMin = 50.0;
-float colorMax = 100.0;
-
 color wheelColor;
 
 boolean animate = false;
@@ -66,17 +63,6 @@ void setup() {
              .setDefaultValue(colorVariation)
              .setBroadcast(true);               
              
-  cp5.addRange("stampColors")
-             .setBroadcast(false) 
-             .setFont(font)
-             .setLabel("Color Range")
-             .setPosition(220,90)
-             .setSize(400,30)
-             .setHandleSize(20)
-             .setRange(0,255)
-             .setRangeValues(colorMin,colorMax)
-             .setBroadcast(true);  
- 
    cp5.addButtonBar("currentStamp")
              .setBroadcast(false) 
              .setFont(font)
@@ -99,8 +85,7 @@ void setup() {
             .setPosition(10, 10)
             .setSize(200, 200)
             .setRGB(color(255, 255, 255))
-            .setLabelVisible(false);             
-   
+            .setLabelVisible(false);                
 }
 
 void draw() {
