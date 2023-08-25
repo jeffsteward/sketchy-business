@@ -5,6 +5,9 @@ class Ink {
   boolean isDrawing = false;
   boolean isErasing = false;
   
+  float transparency = 0.0;
+  float weight = 0.0;
+
   int penMode = 0;
   
   Ink() {
@@ -47,6 +50,14 @@ class Ink {
     stopErasing();
   }
   
+  void setTransparency(float t) {
+    transparency = t;
+  }
+
+  void setWeight(float w) {
+    weight = w;
+  }
+
   void setColor(color c) {
     fill = c;
   }
@@ -59,15 +70,15 @@ class Ink {
       
       if (isDrawing) {
         inkSpace.blendMode(BLEND);
-        inkSpace.stroke(fill, d*0.8);
+        inkSpace.stroke(fill, d*transparency); // 0.8
       }
       else if (isErasing) {
         inkSpace.blendMode(REPLACE);
-        inkSpace.stroke(0,0,0, d*0.2);
+        inkSpace.stroke(0,0,0, d*transparency); // 0.2
       }
       
       inkSpace.strokeCap(SQUARE);
-      inkSpace.strokeWeight(d*0.2);
+      inkSpace.strokeWeight(d*weight); // 0.2
       inkSpace.line(mouseX, mouseY, pmouseX, pmouseY);    
       inkSpace.endDraw();
     }      

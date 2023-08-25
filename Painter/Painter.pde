@@ -19,6 +19,8 @@ float currentMode = MODE_CREATE;
 
 float backgroundColor = 100.0;
 float colorVariation = 25.0;
+float lineWeight = 0.0;
+float colorTransparency = 0.0;
 
 color wheelColor;
 
@@ -46,7 +48,7 @@ void setup() {
              .setFont(font)
              .setLabel("Background")
              .setPosition(220,10)
-             .setSize(400,30)
+             .setSize(400,25)
              .setHandleSize(20)
              .setRange(0,255)
              .setDefaultValue(backgroundColor)
@@ -56,12 +58,34 @@ void setup() {
              .setBroadcast(false) 
              .setFont(font)
              .setLabel("Variation")
-             .setPosition(220,50)
-             .setSize(400,30)
+             .setPosition(220,40)
+             .setSize(400,25)
              .setHandleSize(20)
-             .setRange(0,100)
+             .setRange(0.0,1.0)
              .setDefaultValue(colorVariation)
-             .setBroadcast(true);               
+             .setBroadcast(true);          
+
+  cp5.addSlider("colorTransparency")
+             .setBroadcast(false) 
+             .setFont(font)
+             .setLabel("Transparency")
+             .setPosition(220,70)
+             .setSize(400,25)
+             .setHandleSize(20)
+             .setRange(0.0,1.0)
+             .setDefaultValue(colorTransparency)
+             .setBroadcast(true);              
+
+  cp5.addSlider("lineWeight")
+             .setBroadcast(false) 
+             .setFont(font)
+             .setLabel("Weight")
+             .setPosition(220,100)
+             .setSize(400,25)
+             .setHandleSize(20)
+             .setRange(0.0,1.0)
+             .setDefaultValue(lineWeight)
+             .setBroadcast(true);                                
              
    cp5.addButtonBar("currentStamp")
              .setBroadcast(false) 
@@ -137,6 +161,14 @@ void controlEvent(ControlEvent theControlEvent) {
   //  colorMin = int(theControlEvent.getController().getArrayValue(0));
   //  colorMax = int(theControlEvent.getController().getArrayValue(1));
   //}
+
+  if(theControlEvent.isFrom("colorTransparency")) {
+    drawing.setTransparency(theControlEvent.getController().getValue());
+  }
+
+  if(theControlEvent.isFrom("lineWeight")) {
+    drawing.setWeight(theControlEvent.getController().getValue());
+  }
 
   if(theControlEvent.isFrom("colorWheel")) {
     wheelColor = cp5.get(ColorWheel.class,"colorWheel").getRGB();  
