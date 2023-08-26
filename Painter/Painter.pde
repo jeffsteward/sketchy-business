@@ -19,8 +19,8 @@ float currentMode = MODE_CREATE;
 
 float backgroundColor = 100.0;
 float colorVariation = 25.0;
-float lineWeight = 0.0;
-float colorTransparency = 0.0;
+float lineWeight = 0.2;
+float colorTransparency = 0.8;
 
 color wheelColor;
 
@@ -37,6 +37,8 @@ void setup() {
   noStroke();
   
   drawing = new Ink();
+  drawing.setTransparency(colorTransparency);
+  drawing.setWeight(lineWeight);
   
   PFont pfont = createFont("Arial", 20, true);
   ControlFont font = new ControlFont(pfont, 20);
@@ -61,7 +63,7 @@ void setup() {
              .setPosition(220,40)
              .setSize(400,25)
              .setHandleSize(20)
-             .setRange(0.0,1.0)
+             .setRange(0.0,100.0)
              .setDefaultValue(colorVariation)
              .setBroadcast(true);          
 
